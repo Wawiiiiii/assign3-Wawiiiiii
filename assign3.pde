@@ -32,7 +32,7 @@ void setup() {
   life = loadImage("img/life.png");
   title = loadImage("img/title.jpg");
   gameover = loadImage("img/gameover.jpg");
-  startNormal = loadImage("img/startNormal.png");
+  startNormal = loadImage("img/startNormal.png")
   startHovered = loadImage("img/startHovered.png");
   restartNormal = loadImage("img/restartNormal.png");
   restartHovered = loadImage("img/restartHovered.png");
@@ -54,7 +54,7 @@ void setup() {
 
   distance = Y-80;
   distanceX = groundhogX;
-  distanceY = groundhogY+80;
+  distanceY = groundhogY;
   groundhogY=80;
 }
 
@@ -276,7 +276,7 @@ void keyReleased() {
       downPressed = false;
       groundhogAppear = true;
       Y=distance;
-      if (Y<-1600) {
+      if (Y<=-1600) {
         Y = -1600;
         groundhogY = distanceY;
         if (groundhogY+80>height)groundhogY=height-80;
