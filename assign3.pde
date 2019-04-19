@@ -274,7 +274,7 @@ void keyReleased() {
     switch (keyCode) {
     case DOWN:
       downPressed = false;
-      groundhogAppear = true;
+      if(!leftPressed && !rightPressed)groundhogAppear = true;
       Y=distance;
       if (Y<=-1600) {
         Y = -1600;
@@ -284,13 +284,13 @@ void keyReleased() {
       break;
     case LEFT:
       leftPressed = false;
-      groundhogAppear = true;
+      if(!downPressed && !rightPressed)groundhogAppear = true;
       groundhogX=distanceX;
       break;
     case RIGHT:
       rightPressed = false;
       groundhogX=distanceX;
-      groundhogAppear = true;
+      if(!downPressed && !leftPressed)groundhogAppear = true;
       break;
     }
   }
