@@ -1,7 +1,7 @@
 final int GAME_START = 0, GAME_RUN = 1, GAME_OVER = 2;
 int gameState = 0;
 int groundhogX = 320, groundhogY = 80;
-int Y=0, lifeY, distance, distanceY, distanceX;
+int Y=0, distance, distanceY, distanceX;
 int moveSpeed = 5, downSpeed = 5;
 
 final int GRASS_HEIGHT = 15;
@@ -50,7 +50,6 @@ void setup() {
   groundhogRight = loadImage("img/groundhogRight.png");
 
   playerHealth = 2;
-  lifeY=10;
 
   distance = Y-80;
   distanceX = groundhogX;
@@ -155,7 +154,7 @@ void draw() {
 
     // Health UI
     for (int i=0; i<playerHealth; i++) {
-      image(life, 10+i*70, 10+lifeY);
+      image(life, 10+i*70, 10);
     }
     if (playerHealth>5)playerHealth = 5;
     if (playerHealth<0)playerHealth = 0;
