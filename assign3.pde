@@ -1,8 +1,9 @@
 final int GAME_START = 0, GAME_RUN = 1, GAME_OVER = 2;
 int gameState = 0;
 int groundhogX = 320, groundhogY = 80;
-int Y=0, distance, distanceY, distanceX;
+int Y=0;
 int moveSpeed = 5, downSpeed = 5;
+int downT = 0, leftT = 0, rightT = 0;//T表經過幾個畫格，每15畫格抵達下一格
 
 final int GRASS_HEIGHT = 15;
 final int START_BUTTON_W = 144;
@@ -18,6 +19,9 @@ boolean downPressed = false;
 boolean leftPressed = false;
 boolean rightPressed = false;
 boolean groundhogAppear = true;
+boolean leftMoving = false;
+boolean rightMoving = false;
+boolean downMoving = false;
 
 // For debug function; DO NOT edit or remove this!
 int playerHealth = 0;
@@ -50,10 +54,6 @@ void setup() {
   groundhogRight = loadImage("img/groundhogRight.png");
 
   playerHealth = 2;
-
-  distance = Y-80;
-  distanceX = groundhogX;
-  distanceY = groundhogY;
   groundhogY=80;
 }
 
@@ -148,7 +148,8 @@ void draw() {
     
     
     // Player
-    if (groundhogAppear) {
+    if (!leftMoving && !rightMoving && !downMoving){
+      groundhogAppear = true;
       image(groundhogIdle, groundhogX, groundhogY);
     }
 
@@ -160,44 +161,49 @@ void draw() {
     if (playerHealth<0)playerHealth = 0;
 
     //Pressed
-    if (downPressed) {
-
-      Y-=downSpeed;
-
-      groundhogAppear = false;
+    if(downMoving){
       image(groundhogDown, groundhogX, groundhogY);
-
-      if (Y<distance)distance=distance-80;
-
-      if (Y<=-1600) {
-        Y = -1600;
+      Y-=downSpeed;
+      if(downT<15)downT++;
+      else{
+        downT=0;
+        if(!downPressed)downMoving = false;
+      }
+      if(Y<=-1600){
         downSpeed = 0;
-
         groundhogY+=moveSpeed;
-        if (groundhogY>=distanceY)distanceY=distanceY+80;
-        if (groundhogY+80>height)groundhogY=height-80;
+        if(groundhogY>=height-80)groundhogY = height-80;
       }
     }
-
-    if (leftPressed) {
-      groundhogAppear = false;
+    
+    if(leftMoving){
       image(groundhogLeft, groundhogX, groundhogY);
-
+      if(leftT<15)leftT++;
+      else{
+        leftT=0;
+        if(!leftPressed)leftMoving = false;
+      }
       groundhogX-=moveSpeed;
-      if (groundhogX<=distanceX)distanceX=distanceX-80;
       if (groundhogX<0)groundhogX=0;
     }
-
-    if (rightPressed) {
-      groundhogAppear = false;
+    
+    if(rightMoving){
       image(groundhogRight, groundhogX, groundhogY);
-
       groundhogX+=moveSpeed;
-      if (groundhogX>=distanceX)distanceX=distanceX+80;
+      if(rightT<15)rightT++;
+      else{
+        rightT=0;
+        if(!rightPressed)rightMoving = false;
+      }
       if (groundhogX+80>width)groundhogX=width-80;
     }
-    if (groundhogX+80>width)groundhogX=width-80;
-    if (groundhogX<0)groundhogX=0;
+
+    if(downPressed && !leftPressed && !rightPressed)
+    {downMoving = true;}
+    if(!downPressed && leftPressed && !rightPressed)
+    {leftMoving = true;}
+    if(!downPressed && !leftPressed && rightPressed)
+    {rightMoving = true;}
     
     break;
 
@@ -235,13 +241,13 @@ void keyPressed() {
   if (key == CODED) { // det[ect special keys       
     switch (keyCode) {
     case DOWN:
-      if(!leftPressed && !rightPressed)downPressed = true;
+      downPressed = true;
       break;
     case LEFT:
-      if(!downPressed && !rightPressed)leftPressed = true;
+      leftPressed = true;
       break;
     case RIGHT:
-      if(!downPressed && !leftPressed)rightPressed = true;
+      rightPressed = true;
       break;
     }
   }
@@ -273,23 +279,12 @@ void keyReleased() {
     switch (keyCode) {
     case DOWN:
       downPressed = false;
-      if(!leftPressed && !rightPressed)groundhogAppear = true;
-      Y=distance;
-      if (Y<=-1600) {
-        Y = -1600;
-        groundhogY = distanceY;
-        if (groundhogY+80>height)groundhogY=height-80;
-      }
       break;
     case LEFT:
       leftPressed = false;
-      if(!downPressed && !rightPressed)groundhogAppear = true;
-      groundhogX=distanceX;
       break;
     case RIGHT:
       rightPressed = false;
-      groundhogX=distanceX;
-      if(!downPressed && !leftPressed)groundhogAppear = true;
       break;
     }
   }
